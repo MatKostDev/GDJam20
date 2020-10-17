@@ -261,7 +261,8 @@ MonoBehaviour:
   releaseForceStrength: 0.2
   maxSpeed: 60
   movementLineRenderer: {fileID: 1332717192}
-  maxLineLength: 6
+  lineStartLength: 1
+  maxLineLength: 4
   freshColor: {r: 0.18628374, g: 1, b: 0.08962262, a: 1}
   halfExpiredColor: {r: 0.8773585, g: 0.7802639, b: 0, a: 1}
   expiredColor: {r: 0.8679245, g: 0, b: 0, a: 1}
