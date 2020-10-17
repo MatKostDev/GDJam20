@@ -10,6 +10,7 @@ public class Player : MonoBehaviour
     public float maxSpeed;
 
     public LineRenderer movementLineRenderer;
+    public float        lineStartLength;
     public float        maxLineLength;
 
     [Header("Expiry")]
@@ -114,10 +115,10 @@ public class Player : MonoBehaviour
             m_endPositionHeld = Input.mousePosition;
 
             Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
-            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.015f);
+            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.01f);
 
             Vector2 movementLineStart = position2D;
-            Vector2 movementLineEnd   = position2D + endToStart.normalized * (lineLength);
+            Vector2 movementLineEnd   = position2D + endToStart.normalized * (lineStartLength + lineLength);
 
             movementLineRenderer.SetPosition(0, movementLineStart);
             movementLineRenderer.SetPosition(1, movementLineEnd);

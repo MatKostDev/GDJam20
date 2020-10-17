@@ -10,6 +10,8 @@ public class Enemy : MonoBehaviour
 
     public LineRenderer movementLineRenderer;
 
+    public float lineStartLength;
+
     protected Rigidbody2D m_rigidBody;
 
     public static List<Enemy> enemyList = new List<Enemy>();

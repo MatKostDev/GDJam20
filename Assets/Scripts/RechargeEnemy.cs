@@ -18,6 +18,6 @@ public class RechargeEnemy : Enemy
         Vector2 position2D = transform.position;
 
         movementLineRenderer.SetPosition(0, position2D);
-        movementLineRenderer.SetPosition(1, position2D + m_rigidBody.velocity.normalized * (m_rigidBody.velocity.magnitude * 0.3f));
+        movementLineRenderer.SetPosition(1, position2D + m_rigidBody.velocity.normalized * (lineStartLength + m_rigidBody.velocity.magnitude * 0.13f));
     }
 }
