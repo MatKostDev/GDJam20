@@ -1,6 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -21,6 +24,14 @@ public class Player : MonoBehaviour
 
     [Header("Effects")]
     public ParticleSystem explosionPrefab;
+
+    [Header("Score")] 
+    public TMP_Text currentScoreDisplay;
+    public TMP_Text highScoreDisplay;
+    public TMP_Text comboDisplay;
+
+    public Vector3 scoreDisplayMaxScale;
+    public float   scoreDisplayScaleSpeed;
 
     [HideInInspector] public bool isAlive = true;
 
@@ -45,6 +56,17 @@ public class Player : MonoBehaviour
 
     Vector2 m_deathPosition;
 
+    float m_deadTimer = 0f;
+
+    int m_currentScore;
+    int m_highScore;
+
+    Vector3 m_initialScoreScale;
+    float   m_currentScoreScaleParam = 1f;
+    float   m_highScoreScaleParam    = 1f;
+
+    float m_lastEnemyHitTime = -999f;
+
     void Start()
     {
         m_rigidBody    = GetComponent<Rigidbody2D>();
@@ -57,12 +79,35 @@ public class Player : MonoBehaviour
         m_cameraTransform = Camera.main.transform;
 
         movementLineRenderer.enabled = false;
+
+        m_highScore = PlayerPrefs.GetInt("HighScore");
+        highScoreDisplay.text = m_highScore.ToString();
+
+        m_initialScoreScale = currentScoreDisplay.transform.localScale;
     }
 
     void Update()
     {
+        if (m_currentScoreScaleParam >= 1f)
+            comboDisplay.gameObject.SetActive(false);
+
+        m_currentScoreScaleParam += Time.deltaTime * scoreDisplayScaleSpeed;
+        m_highScoreScaleParam    += Time.deltaTime * scoreDisplayScaleSpeed;
+
+        currentScoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_currentScoreScaleParam);
+        highScoreDisplay.transform.localScale    = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_highScoreScaleParam);
+
+        comboDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, new Vector3(0.7f, 0.7f, 1f), m_currentScoreScaleParam);
+
         if (!isAlive)
         {
+            m_deadTimer += Time.deltaTime;
+            if (m_deadTimer > 3f)
+            {
+                Scene scene = SceneManager.GetActiveScene(); 
+                SceneManager.LoadScene(scene.name);
+            }
+
             transform.position   = m_deathPosition;
             m_rigidBody.velocity = Vector2.zero;
             return;
@@ -175,23 +220,53 @@ public class Player : MonoBehaviour
             rechargeEnemy.Explode();
             Destroy(other.gameObject);
 
+            bool comboHit = false;
+
+            m_currentScore += 100;
+            if (Time.time - m_lastEnemyHitTime < 2.4f)
+            {
+                comboHit = true;
+                m_currentScore += 100;
+                comboDisplay.gameObject.SetActive(true);
+            }
+
+            if (m_currentScore > m_highScore)
+            {
+                m_highScore = m_currentScore;
+
+                highScoreDisplay.text = m_highScore.ToString();
+
+                if (comboHit)
+                    m_highScoreScaleParam = 0f;
+                else
+                    m_highScoreScaleParam = 0.5f;
+            }
+
+            currentScoreDisplay.text = m_currentScore.ToString();
+
+            if (comboHit)
+                m_currentScoreScaleParam = 0f;
+            else
+                m_currentScoreScaleParam = 0.5f;
+
+            m_lastEnemyHitTime = Time.time;
+
             CameraShake.StartCameraShake(0.25f, 1.1f, 28f);
         }
         else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
         {
-            CameraShake.StartCameraShake(0.5f, 1.65f, 29f);
+            CameraShake.StartCameraShake(0.5f, 1.7f, 35f);
             OnDie();
         }
         else
         {
-            CameraShake.StartCameraShake(0.1f, 0.7f, 32f);
-
-            Debug.Log("I MADE IT");
+            CameraShake.StartCameraShake(0.1f, 0.5f, 32f);
         }
     }
 
     void OnDie()
     {
+
         m_deathPosition = transform.position;
 
         Explode();
@@ -212,5 +287,10 @@ public class Player : MonoBehaviour
         explosionEffect.transform.position = transform.position;
 
         Destroy(explosionEffect, 3f);
+    }
+
+    void OnDestroy()
+    {
+        PlayerPrefs.SetInt("HighScore", m_highScore);
     }
 }

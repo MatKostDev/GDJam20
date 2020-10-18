@@ -20,6 +20,18 @@ public class Enemy : MonoBehaviour
 
     public static List<Enemy> enemyList = new List<Enemy>();
 
+    public float Speed
+    {
+        get
+        {
+            return speed;
+        }
+        set
+        {
+            m_rigidBody.velocity = startMoveDirection.normalized * speed;
+        }
+    }
+
     void Awake()
     {
         m_rigidBody = GetComponent<Rigidbody2D>();
@@ -27,8 +39,6 @@ public class Enemy : MonoBehaviour
 
         m_rigidBody.isKinematic = true;
         m_rigidBody.useFullKinematicContacts = true;
-
-        m_rigidBody.velocity = startMoveDirection.normalized * speed;
 
         movementLineRenderer.startWidth = 0.3f;
         movementLineRenderer.endWidth   = 0.3f;
@@ -45,6 +55,15 @@ public class Enemy : MonoBehaviour
 
     void OnDestroy()
     {
+        if (TryGetComponent<RechargeEnemy>(out var recharge))
+        {
+            EnemyManager.numRechargeEnemies--;
+        }
+        else if (TryGetComponent<SpikeEnemy>(out var spike))
+        {
+            EnemyManager.numSpikeEnemies--;
+        }
+
         enemyList.Remove(this);
     }
 
