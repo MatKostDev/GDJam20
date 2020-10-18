@@ -175,16 +175,16 @@ public class Player : MonoBehaviour
             rechargeEnemy.Explode();
             Destroy(other.gameObject);
 
-            CameraShake.StartCameraShake(0.3f, 0.9f, 24f);
+            CameraShake.StartCameraShake(0.25f, 1.1f, 28f);
         }
         else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
         {
-            CameraShake.StartCameraShake(0.15f, 1.6f, 30f);
+            CameraShake.StartCameraShake(0.5f, 1.65f, 29f);
             OnDie();
         }
         else
         {
-            CameraShake.StartCameraShake(0.1f, 0.8f, 40f);
+            CameraShake.StartCameraShake(0.1f, 0.7f, 32f);
 
             Debug.Log("I MADE IT");
         }
