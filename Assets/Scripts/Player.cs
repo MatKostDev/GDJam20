@@ -10,7 +10,6 @@ public class Player : MonoBehaviour
     public float maxSpeed;
 
     public LineRenderer movementLineRenderer;
-    public float        lineStartLength;
     public float        maxLineLength;
 
     [Header("Expiry")]
@@ -20,7 +19,16 @@ public class Player : MonoBehaviour
     public float timeBeforeExpiring;
     public float expiringSpeed;
 
-    bool isLeftClickHeld;
+    [Header("Effects")]
+    public ParticleSystem explosionPrefab;
+
+    [HideInInspector] public bool isAlive = true;
+
+    const float EXPIRED_SCREEN_SHAKE_THRESHOLD = 0.5f;
+
+    const float MOVE_LINE_START_OFFSET = 0.65f;
+
+    bool m_isLeftClickHeld;
 
     Vector2 m_startPositionHeld;
     Vector2 m_endPositionHeld;
@@ -30,22 +38,46 @@ public class Player : MonoBehaviour
     float m_movementCooldownTimer;
 
     Rigidbody2D  m_rigidBody;
+    MeshRenderer m_meshRenderer;
     Material     m_material;
     
+    Transform m_cameraTransform;
+
+    Vector2 m_deathPosition;
+
     void Start()
     {
-        m_rigidBody = GetComponent<Rigidbody2D>();
-        m_material  = GetComponent<MeshRenderer>().material;
+        m_rigidBody    = GetComponent<Rigidbody2D>();
+        m_meshRenderer = GetComponent<MeshRenderer>();
+        m_material     = GetComponent<MeshRenderer>().material;
 
-        movementLineRenderer.startWidth = 0.4f;
-        movementLineRenderer.endWidth   = 0.4f;
+        movementLineRenderer.startWidth = 0.3f;
+        movementLineRenderer.endWidth   = 0.3f;
+
+        m_cameraTransform = Camera.main.transform;
+
+        movementLineRenderer.enabled = false;
     }
 
     void Update()
     {
+        if (!isAlive)
+        {
+            transform.position   = m_deathPosition;
+            m_rigidBody.velocity = Vector2.zero;
+            return;
+        }
+
         if (GameEntityFadeManager.isPlayerVisible)
         {
             m_expiryTimer += Time.deltaTime;
+        }
+
+        if (m_expiryTimer / timeBeforeExpiring > EXPIRED_SCREEN_SHAKE_THRESHOLD)
+        {
+            float cameraShakeAmount = m_expiryTimer / timeBeforeExpiring + EXPIRED_SCREEN_SHAKE_THRESHOLD;
+            cameraShakeAmount       = cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * 0.035f;
+            CameraShake.StartCameraShake(0.04f, cameraShakeAmount, 60f);
         }
 
         m_movementCooldownTimer -= Time.deltaTime;
@@ -70,14 +102,16 @@ public class Player : MonoBehaviour
 
         if (m_expiryTimer > timeBeforeExpiring)
         {
-            gameObject.SetActive(false);
+            OnDie();
+
+            return;
         }
 
         if (Input.GetMouseButtonDown(0))
         {
             if (m_movementCooldownTimer < 0f && GameEntityFadeManager.isPlayerVisible)
             {
-                isLeftClickHeld = true;
+                m_isLeftClickHeld = true;
 
                 movementLineRenderer.enabled = true;
 
@@ -87,9 +121,9 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonUp(0))
         {
-            if (isLeftClickHeld)
+            if (m_isLeftClickHeld)
             {
-                isLeftClickHeld = false;
+                m_isLeftClickHeld = false;
 
                 movementLineRenderer.enabled = false;
 
@@ -108,7 +142,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (isLeftClickHeld)
+        if (m_isLeftClickHeld)
         {
             Vector2 position2D = transform.position;
 
@@ -117,8 +151,8 @@ public class Player : MonoBehaviour
             Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
             float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.01f);
 
-            Vector2 movementLineStart = position2D;
-            Vector2 movementLineEnd   = position2D + endToStart.normalized * (lineStartLength + lineLength);
+            Vector2 movementLineStart = position2D + (endToStart.normalized * MOVE_LINE_START_OFFSET);
+            Vector2 movementLineEnd   = movementLineStart + endToStart.normalized * lineLength;
 
             movementLineRenderer.SetPosition(0, movementLineStart);
             movementLineRenderer.SetPosition(1, movementLineEnd);
@@ -132,10 +166,51 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D other)
     {
+        if (!isAlive)
+            return;
+
         if (other.gameObject.TryGetComponent<RechargeEnemy>(out var rechargeEnemy))
         {
             m_expiryTimer = 0f;
+            rechargeEnemy.Explode();
             Destroy(other.gameObject);
+
+            CameraShake.StartCameraShake(0.3f, 0.9f, 24f);
         }
+        else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
+        {
+            CameraShake.StartCameraShake(0.15f, 1.6f, 30f);
+            OnDie();
+        }
+        else
+        {
+            CameraShake.StartCameraShake(0.1f, 0.8f, 40f);
+
+            Debug.Log("I MADE IT");
+        }
+    }
+
+    void OnDie()
+    {
+        m_deathPosition = transform.position;
+
+        Explode();
+
+        m_meshRenderer.enabled       = false;
+        movementLineRenderer.enabled = false;
+
+        isAlive = false;
+
+        m_rigidBody.velocity = Vector2.zero;
+    }
+
+    void Explode()
+    {
+        ParticleSystem explosionEffect = Instantiate(explosionPrefab);
+        explosionEffect.Play();
+
+        explosionEffect.transform.position = transform.position;
+
+        Destroy(explosionEffect, 3f);
     }
 }

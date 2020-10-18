@@ -46,8 +46,8 @@ public class GameEntityFadeManager : MonoBehaviour
                 newPlayerAlpha = Mathf.Lerp(1f, 0f, m_fadeParam);
                 newEnemyAlpha  = Mathf.Lerp(0f, 1f, m_fadeParam);
 
-                newPlayerMoveLineAlpha = newPlayerAlpha * 0.5f;
-                newEnemyMoveLineAlpha  = newEnemyAlpha > 0.95f ? newEnemyAlpha : 0f;
+                newPlayerMoveLineAlpha = newPlayerAlpha;
+                newEnemyMoveLineAlpha  = newEnemyAlpha;
             }
             else
             {
@@ -55,7 +55,7 @@ public class GameEntityFadeManager : MonoBehaviour
                 newEnemyAlpha  = Mathf.Lerp(1f, 0f, m_fadeParam);
 
                 newPlayerMoveLineAlpha = newPlayerAlpha;
-                newEnemyMoveLineAlpha  = 0f;
+                newEnemyMoveLineAlpha  = newEnemyAlpha;
             }
 
             {
