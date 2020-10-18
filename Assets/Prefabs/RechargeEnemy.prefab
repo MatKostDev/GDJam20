@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   startMoveDirection: {x: 1, y: 1}
-  speed: 8
+  speed: 10
   movementLineRenderer: {fileID: 1280235076802359304}
   explosionPrefab: {fileID: 5809624892982709402, guid: 953f25b8055770d458881a231f809a2d, type: 3}
   minMoveLineLength: 0.07

@@ -28,10 +28,14 @@ public class Player : MonoBehaviour
     [Header("Score")] 
     public TMP_Text currentScoreDisplay;
     public TMP_Text highScoreDisplay;
-    public TMP_Text comboDisplay;
 
     public Vector3 scoreDisplayMaxScale;
     public float   scoreDisplayScaleSpeed;
+    public TMP_Text comboDisplay;
+
+    [Header("Audio")]
+    public AudioClip playerDieClip;
+    public AudioClip rechargeHitClip;
 
     [HideInInspector] public bool isAlive = true;
 
@@ -51,6 +55,7 @@ public class Player : MonoBehaviour
     Rigidbody2D  m_rigidBody;
     MeshRenderer m_meshRenderer;
     Material     m_material;
+    AudioSource  m_audioSource;
     
     Transform m_cameraTransform;
 
@@ -72,6 +77,7 @@ public class Player : MonoBehaviour
         m_rigidBody    = GetComponent<Rigidbody2D>();
         m_meshRenderer = GetComponent<MeshRenderer>();
         m_material     = GetComponent<MeshRenderer>().material;
+        m_audioSource  = GetComponent<AudioSource>();
 
         movementLineRenderer.startWidth = 0.3f;
         movementLineRenderer.endWidth   = 0.3f;
@@ -216,6 +222,8 @@ public class Player : MonoBehaviour
 
         if (other.gameObject.TryGetComponent<RechargeEnemy>(out var rechargeEnemy))
         {
+            m_audioSource.PlayOneShot(rechargeHitClip);
+
             m_expiryTimer = 0f;
             rechargeEnemy.Explode();
             Destroy(other.gameObject);
@@ -226,7 +234,7 @@ public class Player : MonoBehaviour
             if (Time.time - m_lastEnemyHitTime < 2.4f)
             {
                 comboHit = true;
-                m_currentScore += 100;
+                m_currentScore += 200;
                 comboDisplay.gameObject.SetActive(true);
             }
 
@@ -266,6 +274,7 @@ public class Player : MonoBehaviour
 
     void OnDie()
     {
+        m_audioSource.PlayOneShot(playerDieClip);
 
         m_deathPosition = transform.position;
 
@@ -292,5 +301,6 @@ public class Player : MonoBehaviour
     void OnDestroy()
     {
         PlayerPrefs.SetInt("HighScore", m_highScore);
+        PlayerPrefs.Save();
     }
 }

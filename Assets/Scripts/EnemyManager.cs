@@ -12,7 +12,7 @@ public class EnemyManager : MonoBehaviour
     public static int numRechargeEnemies;
     public static int numSpikeEnemies;
 
-    const int MAX_LEVEL = 17;
+    const int MAX_LEVEL = 20;
 
     const float TIME_BETWEEN_LEVELS = 15f;
 
@@ -90,7 +90,7 @@ public class EnemyManager : MonoBehaviour
 
         SpawnSpikeEnemy(spawnPoints[Random.Range(0, spawnPoints.Count)]);
 
-        if (m_currentLevel <= 10)
+        if (m_currentLevel <= 3)
             m_minNumRechargeEnemies--;
     }
 }
