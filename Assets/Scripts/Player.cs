@@ -127,7 +127,7 @@ public class Player : MonoBehaviour
         if (m_expiryTimer / timeBeforeExpiring > EXPIRED_SCREEN_SHAKE_THRESHOLD)
         {
             float cameraShakeAmount = m_expiryTimer / timeBeforeExpiring + EXPIRED_SCREEN_SHAKE_THRESHOLD;
-            cameraShakeAmount       = cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * 0.035f;
+            cameraShakeAmount       = cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * 0.055f;
             CameraShake.StartCameraShake(0.04f, cameraShakeAmount, 60f);
         }
 
@@ -213,6 +213,10 @@ public class Player : MonoBehaviour
         {
             m_rigidBody.velocity = m_rigidBody.velocity.normalized * maxSpeed;
         }
+
+        Vector3 newPosition = transform.position;
+        newPosition.z       = 0f;
+        transform.position  = newPosition;
     }
 
     void OnCollisionEnter2D(Collision2D other)
@@ -248,6 +252,9 @@ public class Player : MonoBehaviour
                     m_highScoreScaleParam = 0f;
                 else
                     m_highScoreScaleParam = 0.5f;
+
+                PlayerPrefs.SetInt("HighScore", m_highScore);
+                PlayerPrefs.Save();
             }
 
             currentScoreDisplay.text = m_currentScore.ToString();
@@ -259,16 +266,16 @@ public class Player : MonoBehaviour
 
             m_lastEnemyHitTime = Time.time;
 
-            CameraShake.StartCameraShake(0.25f, 1.1f, 28f);
+            CameraShake.StartCameraShake(0.45f, 1.25f, 7f);
         }
         else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
         {
-            CameraShake.StartCameraShake(0.5f, 1.7f, 35f);
+            CameraShake.StartCameraShake(0.7f, 1.8f, 7f);
             OnDie();
         }
         else
         {
-            CameraShake.StartCameraShake(0.1f, 0.5f, 32f);
+            CameraShake.StartCameraShake(0.12f, 0.5f, 15f);
         }
     }
 

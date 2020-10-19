@@ -89,8 +89,5 @@ public class EnemyManager : MonoBehaviour
         m_levelTimer = 0f;
 
         SpawnSpikeEnemy(spawnPoints[Random.Range(0, spawnPoints.Count)]);
-
-        if (m_currentLevel <= 3)
-            m_minNumRechargeEnemies--;
     }
 }

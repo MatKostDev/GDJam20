@@ -47,6 +47,7 @@ public class Enemy : MonoBehaviour
     protected void Update()
     {
         Vector2 position2D = transform.position;
+        transform.position = new Vector3(position2D.x, position2D.y, 0f);
 
         Vector2 movementLineStart = position2D + (m_rigidBody.velocity.normalized * moveLineStartOffset);
         movementLineRenderer.SetPosition(0, movementLineStart);

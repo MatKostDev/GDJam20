@@ -23,7 +23,7 @@ public class CameraShake : MonoBehaviour
     {
         if (s_duration > 0)
         {
-            if (Time.frameCount % 20 == 0)
+            if (Time.frameCount % 4 == 0)
             {
                 s_cameraTransform.localPosition = s_originalPos + Random.insideUnitSphere * s_amount;
 
