@@ -36,18 +36,26 @@ public class GameEntityFadeManager : MonoBehaviour
 
             isPlayerVisible = true;
 
-            float newPlayerAlpha; 
+            float newPlayerAlpha;
+            float newPlayerMoveLineAlpha;
             float newEnemyAlpha;
+            float newEnemyMoveLineAlpha;
 
             if (m_isFadingPlayer)
             {
                 newPlayerAlpha = Mathf.Lerp(1f, 0f, m_fadeParam);
                 newEnemyAlpha  = Mathf.Lerp(0f, 1f, m_fadeParam);
+
+                newPlayerMoveLineAlpha = newPlayerAlpha;
+                newEnemyMoveLineAlpha  = newEnemyAlpha;
             }
             else
             {
                 newPlayerAlpha = Mathf.Lerp(0f, 1f, m_fadeParam);
                 newEnemyAlpha  = Mathf.Lerp(1f, 0f, m_fadeParam);
+
+                newPlayerMoveLineAlpha = newPlayerAlpha;
+                newEnemyMoveLineAlpha  = newEnemyAlpha;
             }
 
             {
@@ -61,7 +69,7 @@ public class GameEntityFadeManager : MonoBehaviour
                 {
                     Material playerMoveLineMaterial = playerMoveLine.material;
                     Color    newPlayerMoveLineColor = playerMoveLineMaterial.color;
-                    newPlayerMoveLineColor.a        = newPlayerAlpha;
+                    newPlayerMoveLineColor.a        = newPlayerMoveLineAlpha;
                     playerMoveLineMaterial.color    = newPlayerMoveLineColor;
                 }
             }
@@ -77,7 +85,7 @@ public class GameEntityFadeManager : MonoBehaviour
 
                 Material enemyMoveLineMaterial = enemyMoveLine.material;
                 Color newEnemyMoveLineColor    = enemyMoveLineMaterial.color;
-                newEnemyMoveLineColor.a        = newEnemyAlpha;
+                newEnemyMoveLineColor.a        = newEnemyMoveLineAlpha;
                 enemyMoveLineMaterial.color    = newEnemyMoveLineColor;
             }
         }
