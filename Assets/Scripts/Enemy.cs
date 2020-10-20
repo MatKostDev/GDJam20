@@ -40,8 +40,8 @@ public class Enemy : MonoBehaviour
         m_rigidBody.isKinematic = true;
         m_rigidBody.useFullKinematicContacts = true;
 
-        movementLineRenderer.startWidth = 0.3f;
-        movementLineRenderer.endWidth   = 0.3f;
+        movementLineRenderer.startWidth = 0.4f;
+        movementLineRenderer.endWidth   = 0.4f;
     }
 
     protected void Update()

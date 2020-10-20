@@ -40,8 +40,10 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isAlive = true;
 
     const float EXPIRED_SCREEN_SHAKE_THRESHOLD = 0.5f;
+    const float MOVE_LINE_START_OFFSET         = 0.72f;
+    const float MAX_COMBO_TIME                 = 2.8f;
 
-    const float MOVE_LINE_START_OFFSET = 0.65f;
+    int m_comboNumber = 0;
 
     bool m_isLeftClickHeld;
 
@@ -79,8 +81,8 @@ public class Player : MonoBehaviour
         m_material     = GetComponent<MeshRenderer>().material;
         m_audioSource  = GetComponent<AudioSource>();
 
-        movementLineRenderer.startWidth = 0.3f;
-        movementLineRenderer.endWidth   = 0.3f;
+        movementLineRenderer.startWidth = 0.4f;
+        movementLineRenderer.endWidth   = 0.4f;
 
         m_cameraTransform = Camera.main.transform;
 
@@ -103,7 +105,7 @@ public class Player : MonoBehaviour
         currentScoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_currentScoreScaleParam);
         highScoreDisplay.transform.localScale    = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_highScoreScaleParam);
 
-        comboDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, new Vector3(0.7f, 0.7f, 1f), m_currentScoreScaleParam);
+        comboDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, new Vector3(0.9f, 0.9f, 1f), m_currentScoreScaleParam);
 
         if (!isAlive)
         {
@@ -200,7 +202,7 @@ public class Player : MonoBehaviour
             m_endPositionHeld = Input.mousePosition;
 
             Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
-            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.01f);
+            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.015f);
 
             Vector2 movementLineStart = position2D + (endToStart.normalized * MOVE_LINE_START_OFFSET);
             Vector2 movementLineEnd   = movementLineStart + endToStart.normalized * lineLength;
@@ -235,11 +237,19 @@ public class Player : MonoBehaviour
             bool comboHit = false;
 
             m_currentScore += 100;
-            if (Time.time - m_lastEnemyHitTime < 2.4f)
+            if (Time.time - m_lastEnemyHitTime < MAX_COMBO_TIME)
             {
+                m_comboNumber++;
                 comboHit = true;
-                m_currentScore += 200;
+
+                m_currentScore += 100 * m_comboNumber;
+                comboDisplay.text = "COMBO!" + " x" + (m_comboNumber + 1).ToString();
+
                 comboDisplay.gameObject.SetActive(true);
+            }
+            else //no combo
+            {
+                m_comboNumber = 0;
             }
 
             if (m_currentScore > m_highScore)
@@ -266,16 +276,16 @@ public class Player : MonoBehaviour
 
             m_lastEnemyHitTime = Time.time;
 
-            CameraShake.StartCameraShake(0.45f, 1.25f, 7f);
+            CameraShake.StartCameraShake(0.6f, 1.4f, 7f);
         }
         else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
         {
-            CameraShake.StartCameraShake(0.7f, 1.8f, 7f);
+            CameraShake.StartCameraShake(2.25f, 0.82f, 6f);
             OnDie();
         }
         else
         {
-            CameraShake.StartCameraShake(0.12f, 0.5f, 15f);
+            CameraShake.StartCameraShake(0.22f, 0.79f, 15f);
         }
     }
 

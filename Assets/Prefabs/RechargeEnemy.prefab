@@ -29,8 +29,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1280235075537825966}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.4553585, y: 2.4553585, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: -0.078811}
+  m_LocalScale: {x: 2.8423898, y: 2.8423898, z: 0.1}
   m_Children:
   - {fileID: 1280235076802359305}
   m_Father: {fileID: 0}
@@ -61,7 +61,7 @@ MonoBehaviour:
   movementLineRenderer: {fileID: 1280235076802359304}
   explosionPrefab: {fileID: 5809624892982709402, guid: 953f25b8055770d458881a231f809a2d, type: 3}
   minMoveLineLength: 0.07
-  moveLineStartOffset: 1.2
+  moveLineStartOffset: 1.35
 --- !u!23 &1280235075537825938
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -81,7 +81,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 47593a1efa4db75408a3fa52a0226c4c, type: 2}
+  - {fileID: 2100000, guid: 0d7fd6a31371b934d864d2e40c4a639e, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

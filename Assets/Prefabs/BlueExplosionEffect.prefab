@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 5809624892982709402}
   - component: {fileID: 7268693271792805198}
   m_Layer: 9
-  m_Name: ExplosionEffect
+  m_Name: BlueExplosionEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -115,7 +115,7 @@ ParticleSystem:
     startLifetime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.8
+      scalar: 1
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -168,7 +168,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 25
+      scalar: 27
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -222,7 +222,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.008547783, g: 0, b: 1, a: 1}
+      maxColor: {r: 0, g: 0.94549274, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -284,7 +284,7 @@ ParticleSystem:
     startSize:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 0.5
+      scalar: 0.58
       minScalar: 1
       maxCurve:
         serializedVersion: 2
@@ -1050,11 +1050,11 @@ ParticleSystem:
         - serializedVersion: 3
           time: 1
           value: 0
-          inSlope: -0.20997915
-          outSlope: -0.20997915
+          inSlope: -2.1552474
+          outSlope: -2.1552474
           tangentMode: 0
           weightedMode: 0
-          inWeight: 0.12871289
+          inWeight: 0.11286092
           outWeight: 0.33333334
         m_PreInfinity: 2
         m_PostInfinity: 2
@@ -1361,8 +1361,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 0, g: 0.18061686, b: 1, a: 1}
-        key1: {r: 0, g: 0.2329545, b: 1, a: 0}
+        key0: {r: 0, g: 0.94248676, b: 1, a: 1}
+        key1: {r: 0, g: 0.90434813, b: 1, a: 0}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}

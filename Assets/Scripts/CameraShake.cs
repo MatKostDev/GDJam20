@@ -38,6 +38,9 @@ public class CameraShake : MonoBehaviour
 
     public static void StartCameraShake(float a_duration, float a_amount, float a_decreaseFactor)
     {
+        if (s_duration > 0f && a_amount < s_amount - 0.6f)
+            return;
+
         s_duration       = a_duration;
         s_amount         = a_amount;
         s_decreaseFactor = a_decreaseFactor;

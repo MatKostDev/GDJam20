@@ -183,7 +183,7 @@ MonoBehaviour:
   explosionPrefab: {fileID: 0}
   minMoveLineLength: 0.6
   moveLineStartOffset: 0.7
-  rotationSpeed: 100
+  rotationSpeed: 200
 --- !u!33 &6944982258095369200
 MeshFilter:
   m_ObjectHideFlags: 0
