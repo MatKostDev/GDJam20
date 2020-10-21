@@ -135,7 +135,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8274378870159554624}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -21.309, y: 5, z: 4.635}
+  m_LocalPosition: {x: -21.309, y: 5, z: 0}
   m_LocalScale: {x: 1.8446553, y: 1.8446553, z: 1.8446553}
   m_Children:
   - {fileID: 8274378871059216947}
@@ -173,6 +173,7 @@ MonoBehaviour:
   expiredColor: {r: 1, g: 0, b: 0, a: 1}
   timeBeforeExpiring: 4
   expiringSpeed: 1
+  trailParticle: {fileID: 0}
   explosionPrefab: {fileID: 5503873806990579131, guid: 73073adec0337f84bbcff040b4e53f70, type: 3}
   currentScoreDisplay: {fileID: 0}
   highScoreDisplay: {fileID: 0}

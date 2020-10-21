@@ -23,6 +23,7 @@ public class Player : MonoBehaviour
     public float expiringSpeed;
 
     [Header("Effects")]
+    public ParticleSystem trailParticle;
     public ParticleSystem explosionPrefab;
 
     [Header("Score")] 
@@ -41,7 +42,7 @@ public class Player : MonoBehaviour
 
     const float EXPIRED_SCREEN_SHAKE_THRESHOLD = 0.5f;
     const float MOVE_LINE_START_OFFSET         = 0.72f;
-    const float MAX_COMBO_TIME                 = 2.8f;
+    const float MAX_COMBO_TIME                 = 2.9f;
 
     int m_comboNumber = 0;
 
@@ -109,6 +110,8 @@ public class Player : MonoBehaviour
 
         if (!isAlive)
         {
+            trailParticle.Stop(true);
+
             m_deadTimer += Time.deltaTime;
             if (m_deadTimer > 3f)
             {
@@ -124,6 +127,8 @@ public class Player : MonoBehaviour
         if (GameEntityFadeManager.isPlayerVisible)
         {
             m_expiryTimer += Time.deltaTime;
+
+            trailParticle.startColor = m_material.color;
         }
 
         if (m_expiryTimer / timeBeforeExpiring > EXPIRED_SCREEN_SHAKE_THRESHOLD)
@@ -180,12 +185,12 @@ public class Player : MonoBehaviour
 
                 movementLineRenderer.enabled = false;
 
-                if (GameEntityFadeManager.isPlayerVisible)
+                m_endPositionHeld  = Input.mousePosition;
+                Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
+
+                //if player did an "empty" left click then don't eat their movement use
+                if (GameEntityFadeManager.isPlayerVisible && endToStart.magnitude > 10f)
                 {
-                    m_endPositionHeld = Input.mousePosition;
-
-                    Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
-
                     Vector2 forceToApply = endToStart * releaseForceStrength;
 
                     m_rigidBody.AddForce(forceToApply, ForceMode2D.Impulse);

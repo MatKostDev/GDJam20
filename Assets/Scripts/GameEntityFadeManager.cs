@@ -25,37 +25,42 @@ public class GameEntityFadeManager : MonoBehaviour
 
     void Update()
     {
-        m_fadeParam += fadeSpeed * Time.deltaTime;
-
         if (m_fadeParam < 1f)
         {
-            if (m_fadeParam > 0.95f)
-            {
-                m_fadeParam = 1f;
-            }
+            m_fadeParam += fadeSpeed * Time.deltaTime;
 
             isPlayerVisible = true;
 
             float newPlayerAlpha;
-            float newPlayerMoveLineAlpha;
             float newEnemyAlpha;
-            float newEnemyMoveLineAlpha;
 
             if (m_isFadingPlayer)
             {
-                newPlayerAlpha = Mathf.Lerp(1f, 0f, m_fadeParam);
-                newEnemyAlpha  = Mathf.Lerp(0f, 1f, m_fadeParam);
+                if (m_fadeParam >= 1f) //check if we reached the max this frame
+                {
+                    newPlayerAlpha = 0f;
+                    newEnemyAlpha  = 1f;
 
-                newPlayerMoveLineAlpha = newPlayerAlpha;
-                newEnemyMoveLineAlpha  = newEnemyAlpha;
+                    player.trailParticle.Stop(true);
+                }
+                else
+                {
+                    newPlayerAlpha = Mathf.Lerp(1f, 0f, m_fadeParam);
+                    newEnemyAlpha  = Mathf.Lerp(0f, 1f, m_fadeParam);
+                }
             }
             else
             {
-                newPlayerAlpha = Mathf.Lerp(0f, 1f, m_fadeParam);
-                newEnemyAlpha  = Mathf.Lerp(1f, 0f, m_fadeParam);
-
-                newPlayerMoveLineAlpha = newPlayerAlpha;
-                newEnemyMoveLineAlpha  = newEnemyAlpha;
+                if (m_fadeParam >= 1f) //check if we reached the max this frame
+                {
+                    newPlayerAlpha = 1f;
+                    newEnemyAlpha  = 0f;
+                }
+                else
+                {
+                    newPlayerAlpha = Mathf.Lerp(0f, 1f, m_fadeParam);
+                    newEnemyAlpha  = Mathf.Lerp(1f, 0f, m_fadeParam);
+                }
             }
 
             {
@@ -69,7 +74,7 @@ public class GameEntityFadeManager : MonoBehaviour
                 {
                     Material playerMoveLineMaterial = playerMoveLine.material;
                     Color    newPlayerMoveLineColor = playerMoveLineMaterial.color;
-                    newPlayerMoveLineColor.a        = newPlayerMoveLineAlpha;
+                    newPlayerMoveLineColor.a        = newPlayerAlpha;
                     playerMoveLineMaterial.color    = newPlayerMoveLineColor;
                 }
             }
@@ -85,7 +90,7 @@ public class GameEntityFadeManager : MonoBehaviour
 
                 Material enemyMoveLineMaterial = enemyMoveLine.material;
                 Color newEnemyMoveLineColor    = enemyMoveLineMaterial.color;
-                newEnemyMoveLineColor.a        = newEnemyMoveLineAlpha;
+                newEnemyMoveLineColor.a        = newEnemyAlpha;
                 enemyMoveLineMaterial.color    = newEnemyMoveLineColor;
             }
         }
@@ -103,6 +108,9 @@ public class GameEntityFadeManager : MonoBehaviour
                 m_isFadingPlayer   = !m_isFadingPlayer;
                 m_fullyActiveTimer = 0f;
                 m_fadeParam        = 0f;
+
+                if (!m_isFadingPlayer)
+                    player.trailParticle.Play(true);
             }
         }
     }
