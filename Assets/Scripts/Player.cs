@@ -171,7 +171,7 @@ public class Player : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            if (m_movementCooldownTimer < 0f && GameEntityFadeManager.isPlayerVisible)
+            if (m_movementCooldownTimer < 0f)
             {
                 m_isLeftClickHeld = true;
 
