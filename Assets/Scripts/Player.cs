@@ -41,8 +41,8 @@ public class Player : MonoBehaviour
     [HideInInspector] public bool isAlive = true;
 
     const float EXPIRED_SCREEN_SHAKE_THRESHOLD = 0.5f;
-    const float MOVE_LINE_START_OFFSET         = 0.72f;
-    const float MAX_COMBO_TIME                 = 2.9f;
+    const float MOVE_LINE_START_OFFSET         = 0.8f;
+    const float MAX_COMBO_TIME                 = 3.3f;
 
     int m_comboNumber = 0;
 
@@ -98,15 +98,19 @@ public class Player : MonoBehaviour
     void Update()
     {
         if (m_currentScoreScaleParam >= 1f)
+        {
             comboDisplay.gameObject.SetActive(false);
+        }
+        else
+        {
+            m_currentScoreScaleParam += Time.deltaTime * scoreDisplayScaleSpeed;
+            m_highScoreScaleParam    += Time.deltaTime * scoreDisplayScaleSpeed;
 
-        m_currentScoreScaleParam += Time.deltaTime * scoreDisplayScaleSpeed;
-        m_highScoreScaleParam    += Time.deltaTime * scoreDisplayScaleSpeed;
+            currentScoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_currentScoreScaleParam);
+            highScoreDisplay.transform.localScale    = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_highScoreScaleParam);
 
-        currentScoreDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_currentScoreScaleParam);
-        highScoreDisplay.transform.localScale    = Vector3.Lerp(scoreDisplayMaxScale, m_initialScoreScale, m_highScoreScaleParam);
-
-        comboDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, new Vector3(0.9f, 0.9f, 1f), m_currentScoreScaleParam);
+            comboDisplay.transform.localScale = Vector3.Lerp(scoreDisplayMaxScale, new Vector3(0.9f, 0.9f, 1f), m_currentScoreScaleParam);
+        }
 
         if (!isAlive)
         {
@@ -135,7 +139,7 @@ public class Player : MonoBehaviour
         {
             float cameraShakeAmount = m_expiryTimer / timeBeforeExpiring + EXPIRED_SCREEN_SHAKE_THRESHOLD;
             cameraShakeAmount       = cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * cameraShakeAmount * 0.055f;
-            CameraShake.StartCameraShake(0.04f, cameraShakeAmount, 60f);
+            CameraShake.StartCameraShake(0.07f, cameraShakeAmount);
         }
 
         m_movementCooldownTimer -= Time.deltaTime;
@@ -207,7 +211,7 @@ public class Player : MonoBehaviour
             m_endPositionHeld = Input.mousePosition;
 
             Vector2 endToStart = m_startPositionHeld - m_endPositionHeld;
-            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.015f);
+            float   lineLength = Mathf.Min(maxLineLength, endToStart.magnitude * 0.02f);
 
             Vector2 movementLineStart = position2D + (endToStart.normalized * MOVE_LINE_START_OFFSET);
             Vector2 movementLineEnd   = movementLineStart + endToStart.normalized * lineLength;
@@ -281,16 +285,16 @@ public class Player : MonoBehaviour
 
             m_lastEnemyHitTime = Time.time;
 
-            CameraShake.StartCameraShake(0.6f, 1.4f, 7f);
+            CameraShake.StartCameraShake(0.4f, 1.3f);
         }
         else if (other.gameObject.TryGetComponent<SpikeEnemy>(out var spikeEnemy))
         {
-            CameraShake.StartCameraShake(2.25f, 0.82f, 6f);
+            CameraShake.StartCameraShake(1.5f, 0.92f);
             OnDie();
         }
         else
         {
-            CameraShake.StartCameraShake(0.22f, 0.79f, 15f);
+            CameraShake.StartCameraShake(0.1f, 0.88f);
         }
     }
 

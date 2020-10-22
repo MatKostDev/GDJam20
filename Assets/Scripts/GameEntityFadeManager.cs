@@ -41,6 +41,7 @@ public class GameEntityFadeManager : MonoBehaviour
                     newPlayerAlpha = 0f;
                     newEnemyAlpha  = 1f;
 
+                    isPlayerVisible = false;
                     player.trailParticle.Stop(true);
                 }
                 else
@@ -96,11 +97,6 @@ public class GameEntityFadeManager : MonoBehaviour
         }
         else
         {
-            if (m_isFadingPlayer)
-            {
-                isPlayerVisible = false;
-            }
-
             m_fullyActiveTimer += Time.deltaTime;
 
             if (m_fullyActiveTimer >= durationFullyActive)
